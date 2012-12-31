@@ -26,7 +26,7 @@ $(function() {
             $(this).replaceWith( $('<img>').attr( { width: this.width, height: this.height, src: this.toDataURL() } ) );
         };
     img.load( function() {
-        img.pixastic('histogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
+        img.pixastic('histogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist }).each( srcify );
         icons.each(drawbg).pixastic('overlayHistogram', {histData:hist, color:"rgba(255,255,255,0.8)" }).each( srcify );
         mainicon.each( drawicon )
         $('.mainicon').each( srcify );

@@ -7,9 +7,13 @@ function getAddHistogramHandler() {
         var img = $('<img>'),
             hist = {};
         img.load( function() {
-            img.pixastic('histogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
+            try {
+                img.pixastic('histogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
+            } catch (e) {
+                chrome.tabs.sendMessage(tab.id, {kind: "securityFailure"});
+            }
             var cv = img.pixastic('hsl', {lightness:-50}).pixastic('overlayHistogram', {histData:hist, color:"rgba(255,255,255,0.8)"});
-            chrome.tabs.sendMessage(tab.id, {kind: "histogram", data: cv[0].toDataURL()});
+            chrome.tabs.sendMessage(tab.id, {kind: "histogram", origSrc: info.srcUrl, data: cv[0].toDataURL()});
         });
         img.attr('src', info.srcUrl);
     };
