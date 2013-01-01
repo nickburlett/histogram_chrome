@@ -7,7 +7,7 @@ function handleMessage( message, port ) {
             try {
                 img.pixastic('histogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
             } catch (e) {
-                chrome.tabs.sendMessage(tab.id, {kind: "securityFailure"});
+                port.postMessage( {kind: "securityFailure"});
             }
             var cv = img.pixastic('hsl', {lightness:-50}).pixastic('overlayHistogram', {histData:hist, color:"rgba(255,255,255,0.8)"});
             port.postMessage({kind: "replaceImage", clickSrc: message.clickSrc, data: cv[0].toDataURL()});
