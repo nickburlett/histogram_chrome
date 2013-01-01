@@ -3,19 +3,32 @@
  */
 function getAddHistogramHandler() {
     return function(info, tab) {
-
-        var img = $('<img>'),
-            hist = {};
-        img.load( function() {
-            try {
-                img.pixastic('histogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
-            } catch (e) {
-                chrome.tabs.sendMessage(tab.id, {kind: "securityFailure"});
-            }
-            var cv = img.pixastic('hsl', {lightness:-50}).pixastic('overlayHistogram', {histData:hist, color:"rgba(255,255,255,0.8)"});
-            chrome.tabs.sendMessage(tab.id, {kind: "histogram", origSrc: info.srcUrl, data: cv[0].toDataURL()});
-        });
-        img.attr('src', info.srcUrl);
+        var toggleHistogram = function( port ) {
+            port.onMessage.addListener( function( message ) {
+                if (message.result == "compute") {
+                    var img = $('<img>'),
+                        hist = {};
+                    img.load( function() {
+                        try {
+                            img.pixastic('histogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
+                        } catch (e) {
+                            chrome.tabs.sendMessage(tab.id, {kind: "securityFailure"});
+                        }
+                        var cv = img.pixastic('hsl', {lightness:-50}).pixastic('overlayHistogram', {histData:hist, color:"rgba(255,255,255,0.8)"});
+                        if (tab.url == info.srcUrl) {
+                            port.postMessage({kind: "navigate", clickSrc: info.srcUrl, data: cv[0].toDataURL()});
+                        } else {
+                            port.postMessage({kind: "replaceImage", clickSrc: info.srcUrl, data: cv[0].toDataURL()});
+                        }
+                    });
+                    img.attr('src', info.srcUrl);
+                } else if (message.result == "revert") {
+                    port.postMessage({kind: "revert", clickSrc:message.origSrc});
+                }
+            });
+        }
+        chrome.extension.onConnect.addListener( toggleHistogram );
+        chrome.tabs.sendRequest(tab.id, {kind: "info", clickSrc: info.srcUrl });
     };
 };
 
