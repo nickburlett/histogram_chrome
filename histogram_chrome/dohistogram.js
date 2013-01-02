@@ -1,15 +1,14 @@
 //var port = chrome.extension.connect();
 
+window.clickedEl = null;
+
 //console.log( port )
 // Record the last element to be right-clicked
 $( function() {
-    var clickedEl = null,
-        port = null;
+    var port = null;
 
     $("body").bind("contextmenu", function(e) {
         clickedEl = e.srcElement;
-    }).click(function() {
-        clickedEl = null;
     });
 
     function origsrc(elm) {
@@ -21,11 +20,11 @@ $( function() {
         };
     };
 
-    chrome.extension.onRequest.addListener(function(request, sender) {
+    window.handleRequest = function(request) {
         if (request.kind == "info" && clickedEl && clickedEl.hasOwnProperty('src') && clickedEl.src == request.clickSrc) {
             console.log("received " + request.kind + " request. clickSrc: " + request.clickSrc)
             if (port === null) {
-                port = chrome.extension.connect( sender.id, { name: clickedEl.src } )
+                port = chrome.extension.connect( { name: clickedEl.src } )
 
                 port.onMessage.addListener(function(request) {
                     if (request.kind == "replaceImage") {
@@ -56,5 +55,6 @@ $( function() {
                 port.postMessage({result:"compute", clickSrc: request.clickSrc});
             }
         }
-    });
+    }
+    chrome.extension.onRequest.addListener( handleRequest );
 });
