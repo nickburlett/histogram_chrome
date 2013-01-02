@@ -1,6 +1,6 @@
 {
   "name" : "Image Histogram",
-  "version" : "0.0.6",
+  "version" : "0.0.7",
   "description" : "Reveal the secret world of image histograms ...",
   "background" : { "scripts": ["jquery-1.8.3.min.js", "pixastic.custom.js", "pixastic.additions.js", "background.js"] },
   "permissions" : [
