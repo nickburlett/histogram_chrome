@@ -24,6 +24,11 @@
       "all_frames": false,
       "matches": ["http://*.flickr.com/*"],
       "js": ["flickr.js"]
+    },
+    {
+      "all_frames": false,
+      "matches": ["http://*.500px.com/*"],
+      "js": ["500px.js"]
     }
   ],
   "content_security_policy": 

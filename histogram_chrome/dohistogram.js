@@ -47,6 +47,11 @@ $( function() {
                     }
                 });
             }
+            if (origsrc(clickedEl) == clickedEl.src) {
+                // deal with sites (like 500px) that change the src out from under us
+                $(clickedEl).attr('histogram_origsrc', null);
+            }
+
             if (origsrc(clickedEl)) {
                 console.log("Posting 'revert' on "+port);
                 port.postMessage({result:"revert", origSrc:origsrc(clickedEl), clickSrc:request.clickSrc});
