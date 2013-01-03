@@ -11,7 +11,7 @@ $(function() {
         $('#copyright').append($clickit);
 
         $('#thephoto,#lightbox').bind("contextmenu", function(e) {
-            $('#copyright').css('left', e.offsetX).css('top', e.offsetY).css('position', 'absolute').css('z-index', 50000);
+            $('#copyright').css('left', e.pageX).css('top', e.pageY).css('position', 'absolute').css('z-index', 50000);
             $('#copyright').stop(true, true).fadeIn().delay(4000).fadeOut('slow');
             e.stopPropagation();
             e.preventDefault();
