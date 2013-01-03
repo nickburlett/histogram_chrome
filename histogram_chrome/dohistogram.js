@@ -21,14 +21,17 @@ $( function() {
     };
 
     window.handleRequest = function(request) {
-        if (request.kind == "info" && clickedEl && clickedEl.hasOwnProperty('src') && clickedEl.src == request.clickSrc) {
+        if ( ! $(clickedEl).prop('src') ) {
+            clickedEl = $('img').filter( function() { return $(this).prop('src') == request.clickSrc; } )
+        }
+        if (request.kind == "info" && $(clickedEl).prop('src') == request.clickSrc) {
             console.log("received " + request.kind + " request. clickSrc: " + request.clickSrc)
             if (port === null) {
-                port = chrome.extension.connect( { name: clickedEl.src } )
+                port = chrome.extension.connect( { name: document.baseURI } )
 
                 port.onMessage.addListener(function(request) {
                     if (request.kind == "replaceImage") {
-                        if ( origsrc(clickedEl) == null && clickedEl && clickedEl.src == request.clickSrc) {
+                        if ( origsrc(clickedEl) == null && clickedEl && $( clickedEl ).prop('src') == request.clickSrc) {
                             if (request.clickSrc == document.baseURI) {
                                 var replace = $('<img>').attr('histogram_origsrc', $(clickedEl).attr('src')).attr('src', request.data) ;
                                 $(clickedEl).replaceWith( replace );
