@@ -46,4 +46,8 @@ $(function() {
 
         $(this).append($clickit);
     });
+
+    $('a.spaceball').waitUntilExists( function() {
+        $(this).removeClass('spaceball');
+    });
 });
