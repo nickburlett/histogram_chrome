@@ -1,3 +1,7 @@
+function parse(type) {
+   return typeof type == 'string' ? JSON.parse(type) : type;
+}
+
 function handleMessage( message, port ) {
     console.log("Received "+ message.result + " from " + port.portId_ + ", " + port.name);
     if (message.result == "compute") {
@@ -5,7 +9,11 @@ function handleMessage( message, port ) {
             hist = {};
         img.load( function() {
             try {
-                img.pixastic('histogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
+                if ( parse(localStorage["color_histogram"]) ) {
+                    img.pixastic('colorhistogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
+                } else {
+                    img.pixastic('histogram', { average : true, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
+                }
             } catch (e) {
                 port.postMessage( {kind: "securityFailure"});
             }
