@@ -34,11 +34,12 @@ $(function() {
         var $clickit = $('<div class="photo-context-menu-sizes"></div>'),
             $toggle = $('<a href="#">Toggle Histogram</a>');
         $toggle.click( function() { 
-            if ($('#lightbox').is(':hidden')) {
+            if ( !$('#lightbox').is('*') || $('#lightbox').is(':hidden')) {
                 clickedEl = $('#photo img')[0];
             } else {
                 clickedEl = $('#lightbox li.loaded').filter( function() { return $(this).css('visibility') != 'hidden'; } ).find('img')[0];
             }
+
             window.handleRequest( {kind:'info', clickSrc: clickedEl.src} );
         });
         $clickit.append($toggle);
