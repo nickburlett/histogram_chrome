@@ -9,7 +9,8 @@ function handleMessage( message, port ) {
             hist = {};
         img.load( function() {
             try {
-                var lightness = -50;
+                var lightness = -50,
+                    inline = true;
                 if ( parse(localStorage["color_histogram"]) ) {
                     img.pixastic('colorhistogram', { paint:false, returnValue:hist });
                     lightness = 50
@@ -17,10 +18,13 @@ function handleMessage( message, port ) {
                     var average = parse(localStorage['average_histogram']);
                     img.pixastic('histogram', { average : average, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
                 }
+                if (parse(localStorage["separate_colors"])) {
+                    inline = false;
+                }
             } catch (e) {
                 port.postMessage( {kind: "securityFailure"});
             }
-            var cv = img.pixastic('hsl', {lightness:lightness}).pixastic('overlayHistogram', {histData:hist, inline: true, color:"rgba(255,255,255,0.8)"});
+            var cv = img.pixastic('hsl', {lightness:lightness}).pixastic('overlayHistogram', {histData:hist, inline: inline, color:"rgba(255,255,255,0.8)"});
             port.postMessage({kind: "replaceImage", clickSrc: message.clickSrc, data: cv[0].toDataURL()});
         });
         img.attr('src', message.clickSrc);
