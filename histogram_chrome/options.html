@@ -5,14 +5,28 @@
 
 <body>
 
-<h3>Image Histogram Options</h3>
+<h2>Image Histogram Options</h2>
 
-<input id="color_histogram" type="checkbox" name="color_histogram" value="color_histogram"><label for="color_histogram">Show Color Histograms</label>
+<input id="color_histogram" type="checkbox" name="color_histogram" value="color_histogram">
+<label for="color_histogram">Show Color Histograms</label>
+<br>
 
+<input id="average_histogram" type="checkbox" name="average_histogram" value="average_histogram">
+<label for="average_histogram">Use a "smart" color filter for the standard (non-color) histogram</label>
 <br>
 <br>
-<div id="status"></div>
-<button id="save">Save</button>
+<br>
+<br>
+
+<div>
+    <h4>About "smart" color filters</h4>
+
+The "smart" color filter approximates how human eyes see color brightness to
+generate the histogram. Essentially, it emphasizes green over red and blue. The
+specific formula used is 0.3*red + 0.59*green + 0.11*blue.
+
+</div>
+
 </body>
 </html>
 

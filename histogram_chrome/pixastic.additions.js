@@ -14,23 +14,42 @@ Pixastic.Actions.overlayHistogram = {
             if (returnValue.rvals) {
                     var ctx = params.canvas.getContext("2d");
                     var vals = [returnValue.rvals, returnValue.gvals, returnValue.bvals];
+                    var maxValue = 0;
+                    for (var v=0; v<3; v++) {
+                        for (var i=0;i<256;i++) {
+                                if (vals[v][i] > maxValue)
+                                        maxValue = vals[v][i];
+                        }
+                    }
                     for (var v=0;v<3;v++) {
                             var yoff = (v+1) * params.height / 3;
-                            var maxValue = 0;
-                            for (var i=0;i<256;i++) {
-                                    if (vals[v][i] > maxValue)
-                                            maxValue = vals[v][i];
+                            var xOffset = params.options.xOffset || 0;
+                            var yOffset = params.options.yOffset || 0;
+
+                            if (params.options.inline) {
+                                var heightScale = params.height / maxValue;
+                                var widthScale = params.width / 256;
+                                var opacity = params.options.opacity || "0.5";
+                            } else {
+                                var heightScale = params.height / 3 / maxValue;
+                                var widthScale = params.width / 256;
+                                var opacity = params.options.opacity || "0.5";
                             }
-                            var heightScale = params.height / 3 / maxValue;
-                            var widthScale = params.width / 256;
-                            if (v==0) ctx.fillStyle = "rgba(255,0,0,0.5)";
-                            else if (v==1) ctx.fillStyle = "rgba(0,255,0,0.5)";
-                            else if (v==2) ctx.fillStyle = "rgba(0,0,255,0.5)";
+                            if (v==0) ctx.fillStyle = "rgba(255,0,0,"+opacity+")";
+                            else if (v==1) ctx.fillStyle = "rgba(0,255,0,"+opacity+")";
+                            else if (v==2) ctx.fillStyle = "rgba(0,0,255,"+opacity+")";
                             for (var i=0;i<256;i++) {
+                                if (params.options.inline) {
+                                    ctx.fillRect(
+                                        i * widthScale + xOffset, params.height - heightScale * vals[v][i] + yOffset,
+                                        widthScale, vals[v][i] * heightScale
+                                    );
+                                } else {
                                     ctx.fillRect(
                                             i * widthScale, params.height - heightScale * vals[v][i] - params.height + yoff,
                                             widthScale, vals[v][i] * heightScale
                                     );
+                                }
                             }
                     }
             } else {
