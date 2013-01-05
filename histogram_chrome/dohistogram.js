@@ -24,7 +24,7 @@ $( function() {
         if ( ! $(clickedEl).prop('src') ) {
             clickedEl = $('img').filter( function() { return $(this).prop('src') == request.clickSrc; } )
         }
-        if (request.kind == "info" && $(clickedEl).prop('src') == request.clickSrc) {
+        if (request.kind == "info" && ( $(clickedEl).prop('src') == request.clickSrc || request.clickSrc === undefined ) ) {
             console.log("received " + request.kind + " request. clickSrc: " + request.clickSrc)
             if (port === null) {
                 port = chrome.extension.connect( { name: document.baseURI } )

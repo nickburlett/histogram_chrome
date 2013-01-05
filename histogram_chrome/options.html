@@ -1,7 +1,14 @@
 <html>
 <head><title>Image Histogram Extension Options</title></head>
 <script src="jquery-1.8.3.min.js"></script>
+<script src="pixastic.custom.js"></script>
+<script src="pixastic.additions.js"></script>
+<script src="draw_histogram.js"></script>
 <script src="options.js"></script>
+
+<style type="text/css">
+.copyright { font-style: italic; font-size: 0.8em; }
+</style>
 
 <body>
 
@@ -18,6 +25,17 @@
 <input id="average_histogram" type="checkbox" name="average_histogram" value="average_histogram">
 <label for="average_histogram">Use a "smart" color filter for the standard (non-color) histogram</label>
 <br>
+
+<input id="additive_color" type="checkbox" name="additive_color" value="additive_color">
+<label for="additive_color">Use "additive" color when drawing the color histograms</label>
+<br>
+
+<h2>Example with these options</h2>
+<img id="example_src" src="example.jpg" style="display:none" alt="Example">
+<img id="example" src="example.jpg" alt="Example">
+<br>
+<span class="copyright">Image Copyright 2012 Nick Burlett. <a href="http://500px.com/photo/22378677">View on 500px</a></span>
+
 <br>
 <br>
 <br>

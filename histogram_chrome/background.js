@@ -5,27 +5,14 @@ function parse(type) {
 function handleMessage( message, port ) {
     console.log("Received "+ message.result + " from " + port.portId_ + ", " + port.name);
     if (message.result == "compute") {
-        var img = $('<img>'),
-            hist = {};
-        img.load( function() {
+        var img = $('<img>');
+        img.load( function () {
             try {
-                var lightness = -50,
-                    inline = true;
-                if ( parse(localStorage["color_histogram"]) ) {
-                    img.pixastic('colorhistogram', { paint:false, returnValue:hist });
-                    lightness = 50
-                } else {
-                    var average = parse(localStorage['average_histogram']);
-                    img.pixastic('histogram', { average : average, paint:false,color:"rgba(255,255,255,0.8)",returnValue:hist });
-                }
-                if (parse(localStorage["separate_colors"])) {
-                    inline = false;
-                }
+                var cv = img.map(draw_histogram).get();
+                port.postMessage({kind: "replaceImage", clickSrc: message.clickSrc, data: cv[0].toDataURL()});
             } catch (e) {
                 port.postMessage( {kind: "securityFailure"});
             }
-            var cv = img.pixastic('hsl', {lightness:lightness}).pixastic('overlayHistogram', {histData:hist, inline: inline, color:"rgba(255,255,255,0.8)"});
-            port.postMessage({kind: "replaceImage", clickSrc: message.clickSrc, data: cv[0].toDataURL()});
         });
         img.attr('src', message.clickSrc);
     } else if (message.result == "revert") {
@@ -42,8 +29,8 @@ chrome.extension.onConnect.addListener( toggleHistogram );
  */
 function getAddHistogramHandler() {
     return function(info, tab) {
-        console.log("Sending info request to tab "+ tab.id + " with clickSrc: " + info.srcUrl);
-        chrome.tabs.sendRequest(tab.id, { kind: "info", clickSrc: info.srcUrl });
+        console.log("Sending info request to tab "+ tab.id + " with clickSrc: " + (info.srcUrl ) );
+        chrome.tabs.sendRequest(tab.id, { kind: "info", clickSrc: info.srcUrl  });
     };
 };
 

@@ -15,6 +15,9 @@ Pixastic.Actions.overlayHistogram = {
                     var ctx = params.canvas.getContext("2d");
                     var vals = [returnValue.rvals, returnValue.gvals, returnValue.bvals];
                     var maxValue = 0;
+                    if (params.options.additive) {
+                        ctx.globalCompositeOperation = 'lighter';
+                    }
                     for (var v=0; v<3; v++) {
                         for (var i=0;i<256;i++) {
                                 if (vals[v][i] > maxValue)

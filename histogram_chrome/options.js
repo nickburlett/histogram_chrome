@@ -1,5 +1,15 @@
 $( function() {
-// Saves options to localStorage.
+var exampleSrc = $('#example_src'),
+    exampleImg = $('#example');
+
+function recomputeExample( ) {
+    var newImg = $('<img>');
+    newImg.load( function() {
+        exampleImg.attr( 'src', newImg.map( draw_histogram ).get()[0].toDataURL() );
+    });
+    newImg.attr('src', exampleSrc.attr('src'));
+}
+
 function parse(type) {
    return typeof type == 'string' ? JSON.parse(type) : type;
 }
@@ -8,6 +18,7 @@ $('input').change( function() {
     var checkbox = $(this);
     var checked = checkbox.is(':checked');
     localStorage[checkbox.attr('name')] = checked;
+    recomputeExample();
 });
 
 
@@ -18,6 +29,7 @@ function restore_options() {
             checked = parse(localStorage[checkbox.attr('name')]);
         checkbox.prop('checked', checked);
     });
+    recomputeExample();
 }
 
 function storageChange(e) {
@@ -25,6 +37,7 @@ function storageChange(e) {
         val = e.originalEvent.newValue;
 
     $('input[name='+key+']').prop('checked', parse(val));
+    recomputeExample();
 }
 
 $(window).bind('storage', storageChange);
