@@ -29,6 +29,10 @@ $( function() {
             if (port === null) {
                 port = chrome.extension.connect( { name: document.baseURI } )
 
+                port.onDisconnect.addListener(function(request) {
+                    port = null;
+                });
+
                 port.onMessage.addListener(function(request) {
                     if (request.kind == "replaceImage") {
                         if ( origsrc(clickedEl) == null && clickedEl && $( clickedEl ).prop('src') == request.clickSrc) {
