@@ -15,32 +15,58 @@ function parse(type) {
 }
 
 $('input').change( function() {
-    var checkbox = $(this);
-    var checked = checkbox.is(':checked');
-    localStorage[checkbox.attr('name')] = checked;
-    recomputeExample();
+    var input = $(this),
+        value = undefined;
+    if (input.attr('type') == 'checkbox') {
+        value = input.prop('checked');
+    } else if (input.attr('type') == 'radio') {
+        value = input.prop('checked') ? input.prop('value') : undefined;
+    } else {
+        value = input.prop('value');
+    }
+    if (value !== undefined) {
+        localStorage[input.attr('name')] = value;
+        recomputeExample();
+    }
 });
 
+function adjustSubOptions() {
+    var $self = $(this);
+    $('div[data-for='+$self.attr('name')+']').each( function() {
+        $this = $(this)
+        if ( $self.attr('checked') && $self.attr('value') == $this.attr('data-value') ) {
+            $this.removeClass('disabled').find('input').removeAttr('disabled');
+        } else {
+            $this.addClass('disabled').find('input').attr('disabled', 'disabled');
+        }
+    });
+}
+
+$('input[name="color_histogram"]').change( adjustSubOptions );
 
 // Restores select box state to saved value from localStorage.
+function set_option() {
+    var input = $(this),
+        value = parse(localStorage[input.attr('name')]);
+    if (input.attr('type') == 'checkbox') {
+        input.prop('checked', value);
+    } else if (input.attr('type') == 'radio') {
+        if (parse(input.attr('value')) == value) {
+            input.prop('checked', true); 
+        }
+    } else {
+        input.prop('value', value);
+    }
+}
+
 function restore_options() {
-    $('input').each( function() {
-        var checkbox = $(this),
-            checked = parse(localStorage[checkbox.attr('name')]);
-        checkbox.prop('checked', checked);
-    });
+    $('input').each( set_option );
+
+    $('input[name="color_histogram"]:checked').each( adjustSubOptions );
     recomputeExample();
 }
 
-function storageChange(e) {
-    var key = e.originalEvent.key,
-        val = e.originalEvent.newValue;
-
-    $('input[name='+key+']').prop('checked', parse(val));
-    recomputeExample();
-}
-
-$(window).bind('storage', storageChange);
+$(window).bind('storage', restore_options);
 
 
 

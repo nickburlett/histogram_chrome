@@ -8,35 +8,46 @@
 
 <style type="text/css">
 .copyright { font-style: italic; font-size: 0.8em; }
+.option-box { margin-bottom: 1em; }
+.sub-options { padding-left: 1.2em; }
+.disabled label { color: grey; }
 </style>
 
 <body>
 
 <h2>Image Histogram Options</h2>
+<div id="color_options" class="option-box">
+    <input type="radio" id="color_histogram" name="color_histogram" value="true"> 
+    <label for="color_histogram">Show Color Histograms</label>
+    <br>
 
-<input id="color_histogram" type="checkbox" name="color_histogram" value="color_histogram">
-<label for="color_histogram">Show Color Histograms</label>
-<br>
+    <div class="sub-options" data-for="color_histogram" data-value="true">
+        <input id="separate_colors" type="checkbox" name="separate_colors" value="separate_colors">
+        <label for="separate_colors">Separate the three colors vertically (color histogram only)</label>
+        <br>
 
-<input id="separate_colors" type="checkbox" name="separate_colors" value="separate_colors">
-<label for="separate_colors">Separate the three colors vertically (color histogram only)</label>
-<br>
+        <input id="additive_color" type="checkbox" name="additive_color" value="additive_color">
+        <label for="additive_color">Use "additive" color when drawing the color histograms</label>
+    </div>
+</div>
 
-<input id="average_histogram" type="checkbox" name="average_histogram" value="average_histogram">
-<label for="average_histogram">Use a "smart" color filter for the standard (non-color) histogram</label>
-<br>
+<div id="normal_options" class="option-box">
+    <input type="radio" id="monochrome_histogram" name="color_histogram" value="false"> 
+    <label for="monochrome_histogram">Show Monochrome Histogram</label>
+    <br>
 
-<input id="additive_color" type="checkbox" name="additive_color" value="additive_color">
-<label for="additive_color">Use "additive" color when drawing the color histograms</label>
-<br>
+    <div class="sub-options" data-for="color_histogram" data-value="false">
+        <input id="average_histogram" type="checkbox" name="average_histogram" value="average_histogram">
+        <label for="average_histogram">Use a "smart" algorithm for calculating the monochrome histogram</label>
+    </div>
+</div>
 
 <h2>Example with these options</h2>
 <img id="example_src" src="example.jpg" style="display:none" alt="Example">
 <img id="example" src="example.jpg" alt="Example">
 <br>
-<span class="copyright">Image Copyright 2012 Nick Burlett. <a href="http://500px.com/photo/22378677">View on 500px</a></span>
+<span class="copyright">Image Copyright 2012 Nick Burlett. <a target="_blank" href="http://500px.com/photo/22378677">View on 500px</a></span>
 
-<br>
 <br>
 <br>
 
